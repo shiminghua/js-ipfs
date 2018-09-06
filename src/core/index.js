@@ -124,7 +124,7 @@ class IPFS extends EventEmitter {
     this.key = components.key(this)
     this.stats = components.stats(this)
     this.resolve = components.resolve(this)
-    
+
     this.state = require('./state')(this)
 
     // ipfs.ls
