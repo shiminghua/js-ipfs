@@ -1,6 +1,8 @@
 'use strict'
 
-const print = require('../../utils').print
+const multibase = require('multibase')
+const { print } = require('../../utils')
+const { cidToString } = require('../../../utils/cid')
 
 module.exports = {
   command: 'rm <ipfsPath...>',
@@ -13,6 +15,11 @@ module.exports = {
       alias: 'r',
       default: true,
       describe: 'Recursively unpin the objects linked to by the specified object(s).'
+    },
+    'cid-base': {
+      describe: 'Number base to display CIDs in.',
+      type: 'string',
+      choices: multibase.names
     }
   },
 
@@ -21,7 +28,7 @@ module.exports = {
     argv.ipfs.pin.rm(argv.ipfsPath, { recursive: recursive }, (err, results) => {
       if (err) { throw err }
       results.forEach((res) => {
-        print(`unpinned ${res.hash}`)
+        print(`unpinned ${cidToString(res.hash, argv.cidBase)}`)
       })
     })
   }

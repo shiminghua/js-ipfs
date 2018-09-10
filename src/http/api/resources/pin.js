@@ -47,7 +47,7 @@ exports.ls = {
 
       return reply({
         Keys: _.mapValues(
-          _.keyBy(result, obj => obj.hash),
+          _.keyBy(result, obj => obj.hash.toBaseEncodedString()),
           obj => ({Type: obj.type})
         )
       })
@@ -71,7 +71,7 @@ exports.add = {
       }
 
       return reply({
-        Pins: result.map(obj => obj.hash)
+        Pins: result.map(obj => obj.hash.toBaseEncodedString())
       })
     })
   }
@@ -93,7 +93,7 @@ exports.rm = {
       }
 
       return reply({
-        Pins: result.map(obj => obj.hash)
+        Pins: result.map(obj => obj.hash.toBaseEncodedString())
       })
     })
   }

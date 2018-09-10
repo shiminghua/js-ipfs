@@ -1,6 +1,8 @@
 'use strict'
 
-const print = require('../../utils').print
+const multibase = require('multibase')
+const { print } = require('../../utils')
+const { cidToString } = require('../../../utils/cid')
 
 module.exports = {
   // bracket syntax with '...' tells yargs to optionally accept a list
@@ -21,6 +23,11 @@ module.exports = {
       alias: 'q',
       default: false,
       describe: 'Write just hashes of objects.'
+    },
+    'cid-base': {
+      describe: 'Number base to display CIDs in.',
+      type: 'string',
+      choices: multibase.names
     }
   },
 
@@ -32,7 +39,7 @@ module.exports = {
     argv.ipfs.pin.ls(paths, { type }, (err, results) => {
       if (err) { throw err }
       results.forEach((res) => {
-        let line = res.hash
+        let line = cidToString(res.hash, argv.cidBase)
         if (!quiet) {
           line += ` ${res.type}`
         }

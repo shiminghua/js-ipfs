@@ -169,7 +169,7 @@ module.exports = (self) => {
           // persist updated pin sets to datastore
           flushPins((err, root) => {
             if (err) { return callback(err) }
-            return callback(null, results.map(hash => ({ hash })))
+            return callback(null, results.map(hash => ({ hash: new CID(hash) })))
           })
         })
       })
@@ -227,7 +227,7 @@ module.exports = (self) => {
           flushPins((err, root) => {
             if (err) { return callback(err) }
             self.log(`Removed pins: ${results}`)
-            return callback(null, results.map(hash => ({ hash })))
+            return callback(null, results.map(hash => ({ hash: new CID(hash) })))
           })
         })
       })
@@ -275,12 +275,12 @@ module.exports = (self) => {
                 case types.direct:
                 case types.recursive:
                   return cb(null, {
-                    hash: key,
+                    hash: new CID(key),
                     type: reason
                   })
                 default:
                   return cb(null, {
-                    hash: key,
+                    hash: new CID(key),
                     type: `${types.indirect} through ${reason}`
                   })
               }
@@ -320,10 +320,11 @@ module.exports = (self) => {
                 type: types.indirect,
                 hash
               })))
+              .map(p => Object.assign(p, { hash: new CID(p.hash) }))
             return callback(null, pins)
           })
         } else {
-          return callback(null, pins)
+          return callback(null, pins.map(p => Object.assign(p, { hash: new CID(p.hash) })))
         }
       }
     }),
